@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css2?family=Product+Sans&display=swap" rel="stylesheet">
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: 'Product Sans', sans-serif;
+      }
+      
+      .title {
+        font-size: 36px;
+        color: #0277BD;
+        animation: animateTitle 3s ease-in-out infinite;
+      }
+      
+      @keyframes animateTitle {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+      
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background-color: #E0E0E0;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+      }
+      
+      .table {
+        margin: 20px 0;
+        border: 1px solid #BDBDBD;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      
+      .table th {
+        background-color: #0277BD;
+        color: #FFFFFF;
+        padding: 10px;
+      }
+      
+      .table td {
+        padding: 10px;
+        border-bottom: 1px solid #BDBDBD;
+        word-wrap: break-word;
+      }
+      
+      textarea {
+        width: 100%;
+        height: 200px;
+        font-size: 18px;
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #BDBDBD;
+        border-radius: 5px;
+        resize: none;
+      }
+      
+      .count {
+        font-size: 14px;
+        color: #0277BD;
+      }
+      
+      button {
+        padding: 10px 20px;
+        background-color: #0277BD;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+      }
+    </style>
+    <title>Entri Paid Unpaid Seperator</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">Entri Paid Unpaid Seperator</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Bulk Numbers</th>
+            <th>Paid Numbers</th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <textarea id="columnA"></textarea>
+        </td>
+        <td>
+          <textarea id="columnB"></textarea>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="count">
+    Column A: <span id="countA">0</span> | Column B: <span id="countB">0</span>
+  </div>
+  <button id="compareBtn">Compare</button>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Column C</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <textarea id="columnC" readonly></textarea>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="count">
+    Column C: <span id="countC">0</span>
+  </div>
+</div>
+<script>
+  const columnA = document.querySelector("#columnA");
+  const columnB = document.querySelector("#columnB");
+  const columnC = document.querySelector("#columnC");
+  const compareBtn = document.querySelector("#compareBtn");
+  const countA = document.querySelector("#countA");
+  const countB = document.querySelector("#countB");
+  const countC = document.querySelector("#countC");
+
+  function addCopyButton(column) {
+    const copyButton = document.createElement("button");
+    copyButton.innerHTML = "Copy";
+    copyButton.onclick = function() {
+      copyToClipboard(column);
+    };
+    column.parentNode.appendChild(copyButton);
+  }
+
+  function copyToClipboard(column) {
+  const textArea = document.createElement("textarea");
+  textArea.value = column.value.split('\n').join('\n');
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textArea);
+}
+
+
+  addCopyButton(columnA);
+  addCopyButton(columnB);
+  addCopyButton(columnC);
+
+
+  compareBtn.addEventListener("click", function() {
+    let columnAValue = columnA.value.split("\n");
+    let columnBValue = columnB.value.split("\n");
+
+    if (!columnAValue[0] && !columnBValue[0]) {
+      columnC.value = "Error: Both Columns are empty";
+      countC.innerHTML = 0;
+      return;
+    }
+
+    columnAValue = columnAValue.filter(function(number) {
+      return columnBValue.indexOf(number) === -1;
+    });
+
+    columnC.value = columnAValue.join("\n");
+    countA.innerHTML = columnA.value.split("\n").length - 1;
+    countB.innerHTML = columnB.value.split("\n").length - 1;
+    countC.innerHTML = columnC.value.split("\n").length - 1;
+  });
+</script>
+</body>
+</html>
+            
